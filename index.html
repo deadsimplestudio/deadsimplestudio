@@ -30,9 +30,31 @@
 </head>
 <body>
 <svg class="logo" viewBox="0 0 640 640" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="128" y="156" width="149" height="149" fill="white"/>
-<rect x="488" y="401" width="80" height="336" transform="rotate(90 488 401)" fill="white"/>
-<path d="M512 191.154L472.153 231L512 270.846L477.846 305L438 265.153L398.154 305L364 270.847L403.846 231L364 191.153L398.153 157L438 196.846L477.847 157L512 191.154Z" fill="white"/>
+<rect id="eye" x="128" y="156" width="149" height="149" fill="white"/>
+<rect id="mouth" x="488" y="401" width="80" height="336" transform="rotate(90 488 401)" fill="white"/>
+<path id="x-eye" d="M512 191.154L472.153 231L512 270.846L477.846 305L438 265.153L398.154 305L364 270.847L403.846 231L364 191.153L398.153 157L438 196.846L477.847 157L512 191.154Z" fill="white"/>
 </svg>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14/dist/gsap.min.js"></script>
+<script>
+  // Blink: squash the square eye vertically from its center
+  gsap.set("#eye", { transformOrigin: "center center" });
+  let blinking = false;
+
+  function blink(onDone) {
+    if (blinking) return;
+    blinking = true;
+    const tl = gsap.timeline({
+      onComplete: () => { blinking = false; if (onDone) onDone(); }
+    });
+    tl.to("#eye", { scaleY: 0.05, duration: 0.08, ease: "power2.in" })
+      .to("#eye", { scaleY: 1, duration: 0.08, ease: "power2.out" });
+  }
+
+  function scheduleBlink() {
+    const delay = 3 + Math.random() * 4;
+    gsap.delayedCall(delay, () => blink(scheduleBlink));
+  }
+
+  scheduleBlink();</script>
 </body>
 </html>
